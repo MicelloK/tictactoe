@@ -29,10 +29,13 @@ class Gui:
                     sys.exit()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
+                    if self.game.current_player == self.game.player_symbol and event.button == 1:
                         x, y = event.pos
                         i, j = y // (SQ_HEIGHT), x // (SQ_WIDTH)
                         self.game.make_move(i, j)
+
+            if self.game.current_player != self.game.player_symbol and not self.game.gameover:
+                self.game.make_move(*self.game.get_ai_move())
 
             self.draw_board()
             self.draw_gameover()
@@ -72,7 +75,6 @@ class Gui:
 
     def draw_gameover(self):
         if self.game.gameover:
-            font_size = SQ_HEIGHT//2
             if self.game.check_win():
                 self.draw_text(f'{self.game.current_player} won!')
             elif self.game.check_draw():

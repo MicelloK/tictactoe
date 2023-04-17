@@ -1,7 +1,10 @@
 # game logic
 
+import random
 class Game:
-    def __init__(self) -> None:
+    def __init__(self, player_symbol) -> None:
+        self.player_symbol = player_symbol
+        self.oponent_symbol = 'X' if player_symbol == 'O' else 'O'
         self.current_player = 'O'
         self.gameover = False
         self.BOARD = [
@@ -41,3 +44,53 @@ class Game:
             self.update_board()
             return True
         return False
+    
+
+    def get_ai_move(self):
+        def minimax(is_maximizing):
+            moves = self.get_valid_moves()
+            if self.check_win() and not is_maximizing:
+                return 1 + len(moves)
+            elif self.check_win() and is_maximizing:
+                return -1 - len(moves)
+            elif self.check_draw():
+                return 0
+            
+            if is_maximizing:
+                best_score = -float('inf')
+                for move in moves:
+                    i, j = move
+                    self.BOARD[i][j] = self.player_symbol
+                    score = minimax(False)
+                    self.BOARD[i][j] = ' '
+                    best_score = max(score, best_score)
+            else:
+                best_score = float('inf')
+                for move in moves:
+                    i, j = move
+                    self.BOARD[i][j] = self.oponent_symbol
+                    score = minimax(True)
+                    self.BOARD[i][j] = ' '
+                    best_score = min(score, best_score)
+            return best_score
+            
+        best_score = -float('inf')
+        best_move = None
+        for move in self.get_valid_moves():
+            i, j = move
+            self.BOARD[i][j] = self.player_symbol
+            score = minimax(False)
+            self.BOARD[i][j] = ' '
+            if score > best_score:
+                best_score = score
+                best_move = move
+        print((best_move, best_score))
+        return best_move
+
+    def get_valid_moves(self):
+        moves = []
+        for i in range(3):
+            for j in range(3):
+                if self.BOARD[i][j] == ' ':
+                    moves.append((i, j))
+        return moves

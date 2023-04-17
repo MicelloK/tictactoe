@@ -4,6 +4,6 @@
 import game, gui
 
 if __name__ == "__main__":
-    game = game.Game()
+    game = game.Game('O')
     gui = gui.Gui(game)
     gui.mainloop()
