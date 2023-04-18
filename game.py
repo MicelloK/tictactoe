@@ -13,6 +13,9 @@ class Game:
             [' ', ' ', ' ']
         ]
 
+        if self.oponent_symbol == 'O':
+            self.make_move(*self.random_move())
+
     def check_win(self):
         for i in range(3):
             if self.BOARD[i][0] == self.BOARD[i][1] == self.BOARD[i][2] != ' ':
@@ -44,6 +47,10 @@ class Game:
             self.update_board()
             return True
         return False
+    
+    def random_move(self):
+        moves = self.get_valid_moves()
+        return random.choice(moves)
     
     def get_ai_move(self):
         def minimax(is_maximizing):
@@ -90,3 +97,4 @@ class Game:
                 if self.BOARD[i][j] == ' ':
                     moves.append((i, j))
         return moves
+    
